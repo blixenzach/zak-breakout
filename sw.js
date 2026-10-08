@@ -5,6 +5,9 @@ self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     for (const k of await caches.keys()) if (k.startsWith('zak-breakout-')) await caches.delete(k);
     await self.registration.unregister();
-    for (const c of await self.clients.matchAll({ type: 'window' })) c.navigate('https://blixenzach.github.io/voltbreak/');
+    for (const c of await self.clients.matchAll({ type: 'window' })) {
+      const u = new URL(c.url);                 // keep challenge links (?c=...)
+      c.navigate('https://blixenzach.github.io/voltbreak/' + u.search + u.hash);
+    }
   })());
 });
